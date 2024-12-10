@@ -10,7 +10,6 @@ The **Multi-Touch Attribution (MTA) Project** is designed to transform and analy
 
 ![Looker Studio Dashboard](./images/looker_studio_dashboard.png)
 
-*Figure 2: Looker Studio Dashboard Overview*
 ---
 
 
