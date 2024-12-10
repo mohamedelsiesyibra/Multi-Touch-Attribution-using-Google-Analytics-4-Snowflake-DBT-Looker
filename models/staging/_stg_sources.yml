@@ -1,0 +1,35 @@
+# models/staging/google_analytics_4/source.yml
+
+version: 2
+
+sources:
+  - name: pc_dbt_db
+    schema: dbt_mw
+    description: "Source database containing Google Analytics 4 event data."
+    tables:
+      - name: ga4_events
+        description: "Google Analytics 4 events table capturing user interactions."
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        columns:
+          - name: session_id
+            description: "Unique identifier for the user session."
+          - name: user_pseudo_id
+            description: "Unique identifier for the user."
+          - name: event_ts
+            description: "Timestamp of the event."
+          - name: utm_channel
+            description: "UTM channel parameter associated with the event."
+          - name: utm_medium
+            description: "UTM medium parameter associated with the event."
+          - name: utm_source
+            description: "UTM source parameter associated with the event."
+          - name: country
+            description: "Country from where the event originated."
+          - name: region
+            description: "Region from where the event originated."
+          - name: event_type
+            description: "Type of the event (e.g., page_view, purchase)."
+          - name: order_value
+            description: "Value of the order if the event is a purchase."

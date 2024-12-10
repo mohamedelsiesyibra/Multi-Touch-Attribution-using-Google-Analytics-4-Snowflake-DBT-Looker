@@ -1,0 +1,81 @@
+
+version: 2
+
+models:
+  - name: mart__all_attribution_model
+    description: >
+      Unified attribution model combining First Click, Last Click, Linear, 
+      Position-Based [40-20-40], and Time Decay attribution models. 
+      Includes attribution points and revenue differentiated by attribution model type.
+    columns:
+      - name: session_user_id
+        description: "Unique identifier combining session ID and user pseudo ID."
+        tests:
+          - not_null
+
+      - name: session_id
+        description: "Unique identifier for the session."
+        tests:
+          - not_null
+
+      - name: user_pseudo_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+
+      - name: event_ts
+        description: "Timestamp of the event."
+        tests:
+          - not_null
+
+      - name: utm_channel
+        description: "UTM channel associated with the event."
+
+      - name: utm_medium
+        description: "UTM medium associated with the event."
+
+      - name: utm_source
+        description: "UTM source associated with the event."
+
+      - name: country
+        description: "Country from where the event originated."
+
+      - name: region
+        description: "Region from where the event originated."
+
+      - name: orders
+        description: "Attribution points assigned to the event."
+        tests:
+          - not_null
+
+      - name: order_revenue
+        description: "Attributed order revenue based on the attribution points."
+        tests:
+          - not_null
+
+      - name: first_order
+        description: "Attribution points assigned if it's the user's first order."
+        tests:
+          - not_null
+
+      - name: first_order_revenue
+        description: "Order revenue attributed to the user's first order."
+        tests:
+          - not_null
+
+      - name: repeated_order
+        description: "Attribution points assigned if it's a repeated order."
+        tests:
+          - not_null
+
+      - name: repeated_order_revenue
+        description: "Order revenue attributed to the user's repeated orders."
+        tests:
+          - not_null
+
+      - name: model
+        description: "Type of attribution model ('First Click', 'Last Click', 'Linear', 'Position Based [40-20-40]', 'Time Decay')."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['First Click', 'Last Click', 'Linear', 'Position Based [40-20-40]', 'Time Decay']

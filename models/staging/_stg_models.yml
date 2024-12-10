@@ -1,0 +1,41 @@
+
+version: 2
+
+models:
+  - name: stg__google_analytics_4__events
+    description: >
+      Staging model for Google Analytics 4 events. 
+      It consolidates raw event data, creates a unique session-user identifier, 
+      and prepares the data for further transformation in the mart layer.
+    columns:
+      - name: session_user_id
+        description: "Unique identifier combining session ID and user pseudo ID."
+        tests:
+          - not_null
+      - name: session_id
+        description: "Unique identifier for the user session."
+        tests:
+          - not_null
+      - name: user_pseudo_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+      - name: event_ts
+        description: "Timestamp of the event."
+        tests:
+          - not_null
+      - name: utm_channel
+        description: "UTM channel parameter associated with the event."
+      - name: utm_medium
+        description: "UTM medium parameter associated with the event."
+      - name: utm_source
+        description: "UTM source parameter associated with the event."
+      - name: country
+        description: "Country from where the event originated."
+      - name: region
+        description: "Region from where the event originated."
+      - name: orders
+        description: "Attribution points assigned to the event."
+      - name: order_revenue
+        description: "Attributed order revenue based on the attribution points."
+
