@@ -1,0 +1,411 @@
+# models/intermediate/mta/_int__mta__models.yml
+
+version: 2
+
+models:
+  - name: int__mta__sessions_aggregation
+    description: >
+      Aggregates session-level data from Google Analytics 4 events.
+      It calculates the earliest UTM parameters, total order value, and flags sessions with purchases.
+    columns:
+      - name: session_user_id
+        description: "Unique identifier combining session ID and user pseudo ID."
+        tests:
+          - unique
+          - not_null
+      - name: session_id
+        description: "Unique identifier for the session."
+        tests:
+          - not_null
+      - name: user_pseudo_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+      - name: event_ts
+        description: "Timestamp of the earliest event in the session."
+        tests:
+          - not_null
+      - name: utm_channel
+        description: "Earliest non-null UTM channel in the session."
+      - name: utm_medium
+        description: "Earliest non-null UTM medium in the session."
+      - name: utm_source
+        description: "Earliest non-null UTM source in the session."
+      - name: country
+        description: "Earliest non-null country in the session."
+      - name: region
+        description: "Earliest non-null region in the session."
+      - name: total_order_value
+        description: "Sum of order_value for all purchase events in the session."
+        tests:
+          - not_null
+      - name: has_purchase
+        description: "Flag indicating if a purchase occurred in the session."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+
+  - name: int__mta__sessions_paid_users
+    description: >
+      Filters sessions to include only those associated with users who have made at least one purchase.
+    columns:
+      - name: session_user_id
+        description: "Unique identifier combining session ID and user pseudo ID."
+        tests:
+          - unique
+          - not_null
+      - name: session_id
+        description: "Unique identifier for the session."
+        tests:
+          - not_null
+      - name: user_pseudo_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+      - name: event_ts
+        description: "Timestamp of the earliest event in the session."
+        tests:
+          - not_null
+      - name: utm_channel
+        description: "UTM channel associated with the session."
+      - name: utm_medium
+        description: "UTM medium associated with the session."
+      - name: utm_source
+        description: "UTM source associated with the session."
+      - name: country
+        description: "Country from where the session originated."
+      - name: region
+        description: "Region from where the session originated."
+      - name: total_order_value
+        description: "Total order value for the session."
+        tests:
+          - not_null
+      - name: has_purchase
+        description: "Flag indicating if a purchase occurred in the session."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+
+  - name: int__mta__sessions_journey_assignment
+    description: >
+      Assigns each purchasing session to a user journey, determining the sequence of purchases.
+      It calculates journey numbers, step numbers, and aggregates journey-level metrics.
+    columns:
+      - name: session_user_id
+        description: "Unique identifier combining session ID and user pseudo ID."
+        tests:
+          - unique
+          - not_null
+      - name: session_id
+        description: "Unique identifier for the session."
+        tests:
+          - not_null
+      - name: user_pseudo_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+      - name: event_ts
+        description: "Timestamp of the earliest event in the session."
+        tests:
+          - not_null
+      - name: utm_channel
+        description: "UTM channel associated with the session."
+      - name: utm_medium
+        description: "UTM medium associated with the session."
+      - name: utm_source
+        description: "UTM source associated with the session."
+      - name: country
+        description: "Country from where the session originated."
+      - name: region
+        description: "Region from where the session originated."
+      - name: total_order_value
+        description: "Total order value for the session."
+        tests:
+          - not_null
+      - name: has_purchase
+        description: "Flag indicating if a purchase occurred in the session."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: journey_number
+        description: "Sequential number representing the user's journey."
+        tests:
+          - not_null
+      - name: step_number
+        description: "Sequential step within the journey."
+        tests:
+          - not_null
+      - name: journey_total_order_value
+        description: "Total order value accumulated in the journey."
+        tests:
+          - not_null
+      - name: max_steps_in_journey
+        description: "Maximum number of steps in the journey."
+        tests:
+          - not_null
+      - name: total_steps_in_journey
+        description: "Total number of steps in the journey."
+        tests:
+          - not_null
+      - name: sum_of_step_numbers
+        description: "Sum of all step numbers in the journey, used for calculating attribution points."
+        tests:
+          - not_null
+
+  - name: int__mta__first_click_model
+    description: >
+      Assigns attribution points and calculates attributed order values based on the first step in each user journey.
+      Differentiates between first-time and repeated orders.
+    columns:
+      - name: session_user_id
+        description: "Unique identifier combining session ID and user pseudo ID."
+        tests:
+          - unique
+          - not_null
+      - name: session_id
+        description: "Unique identifier for the session."
+        tests:
+          - not_null
+      - name: user_pseudo_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+      - name: event_ts
+        description: "Timestamp of the event."
+        tests:
+          - not_null
+      - name: utm_channel
+        description: "UTM channel associated with the event."
+      - name: utm_medium
+        description: "UTM medium associated with the event."
+      - name: utm_source
+        description: "UTM source associated with the event."
+      - name: country
+        description: "Country from where the event originated."
+      - name: region
+        description: "Region from where the event originated."
+      - name: orders
+        description: "Attribution points assigned to the event."
+      - name: order_revenue
+        description: "Attributed order revenue based on the attribution points."
+      - name: first_order
+        description: "Attribution points assigned if it's the user's first order."
+      - name: first_order_revenue
+        description: "Order revenue attributed to the user's first order."
+      - name: repeated_order
+        description: "Attribution points assigned if it's a repeated order."
+      - name: repeated_order_revenue
+        description: "Order revenue attributed to the user's repeated orders."
+      - name: model
+        description: "Type of attribution model ('First Click')."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['First Click']
+
+  - name: int__mta__last_click_model
+    description: >
+      Assigns attribution points and calculates attributed order values based on the last step in each user journey.
+      Differentiates between first-time and repeated orders.
+    columns:
+      - name: session_user_id
+        description: "Unique identifier combining session ID and user pseudo ID."
+        tests:
+          - unique
+          - not_null
+      - name: session_id
+        description: "Unique identifier for the session."
+        tests:
+          - not_null
+      - name: user_pseudo_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+      - name: event_ts
+        description: "Timestamp of the event."
+        tests:
+          - not_null
+      - name: utm_channel
+        description: "UTM channel associated with the event."
+      - name: utm_medium
+        description: "UTM medium associated with the event."
+      - name: utm_source
+        description: "UTM source associated with the event."
+      - name: country
+        description: "Country from where the event originated."
+      - name: region
+        description: "Region from where the event originated."
+      - name: orders
+        description: "Attribution points assigned to the event."
+      - name: order_revenue
+        description: "Attributed order revenue based on the attribution points."
+      - name: first_order
+        description: "Attribution points assigned if it's the user's first order."
+      - name: first_order_revenue
+        description: "Order revenue attributed to the user's first order."
+      - name: repeated_order
+        description: "Attribution points assigned if it's a repeated order."
+      - name: repeated_order_revenue
+        description: "Order revenue attributed to the user's repeated orders."
+      - name: model
+        description: "Type of attribution model ('Last Click')."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Last Click']
+
+  - name: int__mta__linear_attribution_model
+    description: >
+      Assigns attribution points and calculates attributed order values based on the linear attribution model,
+      which evenly distributes credit across all steps in a user journey.
+      Differentiates between first-time and repeated orders.
+    columns:
+      - name: session_user_id
+        description: "Unique identifier combining session ID and user pseudo ID."
+        tests:
+          - unique
+          - not_null
+      - name: session_id
+        description: "Unique identifier for the session."
+        tests:
+          - not_null
+      - name: user_pseudo_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+      - name: event_ts
+        description: "Timestamp of the event."
+        tests:
+          - not_null
+      - name: utm_channel
+        description: "UTM channel associated with the event."
+      - name: utm_medium
+        description: "UTM medium associated with the event."
+      - name: utm_source
+        description: "UTM source associated with the event."
+      - name: country
+        description: "Country from where the event originated."
+      - name: region
+        description: "Region from where the event originated."
+      - name: orders
+        description: "Attribution points assigned to the event."
+      - name: order_revenue
+        description: "Attributed order revenue based on the attribution points."
+      - name: first_order
+        description: "Attribution points assigned if it's the user's first order."
+      - name: first_order_revenue
+        description: "Order revenue attributed to the user's first order."
+      - name: repeated_order
+        description: "Attribution points assigned if it's a repeated order."
+      - name: repeated_order_revenue
+        description: "Order revenue attributed to the user's repeated orders."
+      - name: model
+        description: "Type of attribution model ('Linear')."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Linear']
+
+  - name: int__mta__position_based_attribution_model
+    description: >
+      Assigns attribution points and calculates attributed order values based on the Position-Based attribution model.
+      Differentiates between first-time and repeated orders.
+    columns:
+      - name: session_user_id
+        description: "Unique identifier combining session ID and user pseudo ID."
+        tests:
+          - unique
+          - not_null
+      - name: session_id
+        description: "Unique identifier for the session."
+        tests:
+          - not_null
+      - name: user_pseudo_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+      - name: event_ts
+        description: "Timestamp of the event."
+      - name: utm_channel
+        description: "UTM channel associated with the event."
+      - name: utm_medium
+        description: "UTM medium associated with the event."
+      - name: utm_source
+        description: "UTM source associated with the event."
+      - name: country
+        description: "Country from where the event originated."
+      - name: region
+        description: "Region from where the event originated."
+      - name: orders
+        description: "Attribution points assigned to the event."
+      - name: order_revenue
+        description: "Attributed order revenue based on the attribution points."
+      - name: first_order
+        description: "Attribution points assigned if it's the user's first order."
+      - name: first_order_revenue
+        description: "Order revenue attributed to the user's first order."
+      - name: repeated_order
+        description: "Attribution points assigned if it's a repeated order."
+      - name: repeated_order_revenue
+        description: "Order revenue attributed to the user's repeated orders."
+      - name: model
+        description: "Type of attribution model ('Position Based [40-20-40]')."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Position Based [40-20-40]']
+
+  - name: int__mta__time_decay_attribution_model
+    description: >
+      Assigns attribution points and calculates attributed order values based on the Time-Decay attribution model,
+      where attribution points increase with each step in the journey.
+      Differentiates between first-time and repeated orders.
+    columns:
+      - name: session_user_id
+        description: "Unique identifier combining session ID and user pseudo ID."
+        tests:
+          - unique
+          - not_null
+      - name: session_id
+        description: "Unique identifier for the session."
+        tests:
+          - not_null
+      - name: user_pseudo_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+      - name: event_ts
+        description: "Timestamp of the event."
+        tests:
+          - not_null
+      - name: utm_channel
+        description: "UTM channel associated with the event."
+      - name: utm_medium
+        description: "UTM medium associated with the event."
+      - name: utm_source
+        description: "UTM source associated with the event."
+      - name: country
+        description: "Country from where the event originated."
+      - name: region
+        description: "Region from where the event originated."
+      - name: orders
+        description: "Attribution points assigned to the event."
+      - name: order_revenue
+        description: "Attributed order revenue based on the attribution points."
+      - name: first_order
+        description: "Attribution points assigned if it's the user's first order."
+      - name: first_order_revenue
+        description: "Order revenue attributed to the user's first order."
+      - name: repeated_order
+        description: "Attribution points assigned if it's a repeated order."
+      - name: repeated_order_revenue
+        description: "Order revenue attributed to the user's repeated orders."
+      - name: model
+        description: "Type of attribution model ('Time Decay')."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Time Decay']
