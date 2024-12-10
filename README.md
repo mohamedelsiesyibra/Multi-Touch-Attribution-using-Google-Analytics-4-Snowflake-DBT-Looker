@@ -1,4 +1,4 @@
-# Multi-Touch Attribution (MTA) using-Google Analytics 4 - Snowflake - DBT - Looker
+# Multi-Touch Attribution (MTA) using Google Analytics 4 - Snowflake - DBT - Looker
 
 ---
 
@@ -6,7 +6,7 @@
 
 The **Multi-Touch Attribution (MTA) Project** is designed to transform and analyze Google Analytics 4 (GA4) event data using **dbt** (data build tool) and store the processed data in **Snowflake**. The project focuses on implementing various attribution models to understand user interactions and optimize marketing strategies.
 
-[The Looker Studio Dashboard](https://lookerstudio.google.com/reporting/62c5e01b-e913-4775-896a-4bbc5402c435)
+[The Looker Studio Dashboard (live link)](https://lookerstudio.google.com/reporting/62c5e01b-e913-4775-896a-4bbc5402c435)
 
 ![Looker Studio Dashboard](./images/looker_studio_dashboard.png)
 
